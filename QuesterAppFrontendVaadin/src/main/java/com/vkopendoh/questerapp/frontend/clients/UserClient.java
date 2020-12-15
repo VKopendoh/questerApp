@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Vladimir Kopendoh
  */
 @Service
-public class UserClient extends Client {
+public class UserClient {
     private final Environment env;
     private final String gatewayPath;
     private final RestTemplate restTemplate;
@@ -49,13 +49,5 @@ public class UserClient extends Client {
     public void save(UserModel userModel) {
 
     }
-
-
-    //commented using RestTemplate and instead this use Feign client just this: albumsServiceClient.getAlbums(userId) !!! INSTEAD ALL boilerplate below
-      /*  String albumsUrl = String.format(environment.getProperty("albums.url"),userId);
-        ResponseEntity<List<AlbumResponseModel>> albumsListResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
-        });
-
-        List<AlbumResponseModel> albumsList = albumsListResponse.getBody();*/
 
 }
