@@ -1,0 +1,7 @@
+server.port=8011
+spring.application.name=zuul-ws
+eureka.client.service-url.defaultZone=http://localhost:8010/eureka
+
+users-ws.ribbon.NFLoadBalancerRuleClassName=com.example.StickySessionRule
+ui.ribbon.NFLoadBalancerRuleClassName=com.example.StickySessionRule
+

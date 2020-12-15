@@ -1,0 +1,37 @@
+server.port: 8011
+spring.application.name: zuul-ws
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8010/eureka
+    registryFetchIntervalSeconds: 1
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+
+
+ribbon:
+  serverListRefreshInterval: 1000
+  ConnectTimeout: 6000
+  ReadTimeout: 3000
+  SocketTimeout: 6000
+
+zuul:
+  routes:
+    echo:
+      path: /ui/**
+      serviceId: ui
+      stripPrefix: true
+      sensitiveHeaders: Authorization #This is must to deal with passing events via Zuul thanks to: https://stackoverflow.com/questions/48702314/when-accessing-a-vaadin-app-behind-a-zuul-proxy-get-a-cookies-disabled-error
+
+hystrix:
+  command:
+    ui:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+
+ui:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.vkopendoh.questerapp.gateway.StickySessionRule

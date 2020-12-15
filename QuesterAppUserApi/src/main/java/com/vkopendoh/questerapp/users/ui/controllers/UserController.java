@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Vladimir Kopendoh
@@ -57,5 +59,12 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
+
+    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<UserResponseModel>> getUsers(){
+        List<UserDto> users = userService.getUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(users.stream().map(userDto -> new ModelMapper().map(userDto,UserResponseModel.class)).collect(Collectors.toList()));
+    }
+
 
 }

@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,28 +65,36 @@ public class UserServiceImpl implements UserService {
         return new ModelMapper().map(userEntity, UserDto.class);
     }
 
+    @Override
+    public List<UserDto> getUsers() {
+        List<UserDto> users = userRepository.findAll().stream().map(user-> new ModelMapper().map(user,UserDto.class)).collect(Collectors.toList());
+        return users;
+    }
+
     @PostConstruct
     public void populateTestData() {
-
-        userRepository.saveAll(
-                Stream.of("Maria Young", "Julia	Wilson", "Amy Burgess",
-                        "Angela	Davies", "Michael Jones", "James Ferguson",
-                        "Anthony Dickens", "Heather James", "Joseph	Ogden",
-                        "Trevor	Lambert", "Simon Paige", "Donna King",
-                        "Karen Ross", "Pippa Davidson", "William Berry",
-                        "Robert	Dyer", "Cameron Ellison", "Peter Glover",
-                        "Brandon McDonald", "Anne Pool")
-                        .map(name -> {
-                            String[] split = name.split(" ");
-                            User user = new User();
-                            user.setFirstName(split[0]);
-                            user.setLastName(split[1]);
-                            user.setEncryptedPassword("password123");
-                            String email = (user.getFirstName().substring(0,1) + "." + user.getLastName() + "@" + "vkopendoh.com").toLowerCase();
-                            user.setEmail(email);
-                            return user;
-                        }).collect(Collectors.toList()));
-
+        Stream<User> stream = Stream.of("Maria Young", "Julia Wilson", "Amy Burgess",
+                "Angela Davies", "Michael Jones", "James Ferguson",
+                "Anthony Dickens", "Heather James", "Joseph	Ogden",
+                "Trevor	Lambert", "Simon Paige", "Donna King",
+                "Karen Ross", "Pippa Davidson", "William Berry",
+                "Robert	Dyer", "Cameron Ellison", "Peter Glover",
+                "Brandon McDonald", "Anne Pool")
+                .map(name -> {
+                    String[] split = name.trim().split("\\s+");
+                    User user = new User();
+                    if (split[0] != null)
+                        user.setFirstName(split[0]);
+                    if (split[1] != null)
+                        user.setLastName(split[1]);
+                    user.setEncryptedPassword("password123");
+                    String email = (user.getLastName() == null ? "" : user.getLastName() + "@" + "vkopendoh.com").toLowerCase();
+                    user.setEmail(email);
+                    user.setUserId(UUID.randomUUID().toString());
+                    return user;
+                });
+        List<User> users = stream.collect(Collectors.toList());
+        userRepository.saveAll(users);
     }
 
 }

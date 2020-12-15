@@ -15,7 +15,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class AbstractBaseEntity implements Persistable<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     protected Long id;
 
     public void setId(Long id) {
