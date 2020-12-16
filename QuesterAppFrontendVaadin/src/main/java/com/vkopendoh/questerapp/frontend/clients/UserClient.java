@@ -30,9 +30,9 @@ public class UserClient {
 
     public List<UserModel> findAll() {
         final String usersUrl = gatewayPath + env.getProperty("quester.users.url");
-        ResponseEntity<List<UserModel>> albumsListResponse = restTemplate.exchange(usersUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<UserModel>>() {
+        ResponseEntity<List<UserModel>> userListResponse = restTemplate.exchange(usersUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<UserModel>>() {
         });
-        List<UserModel> users = albumsListResponse.getBody();
+        List<UserModel> users = userListResponse.getBody();
         return users;
     }
 
