@@ -5,28 +5,29 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.shared.communication.PushMode;
-import com.vaadin.flow.shared.ui.Transport;
 import com.vkopendoh.questerapp.frontend.clients.UserClient;
 import com.vkopendoh.questerapp.frontend.ui.MainLayout;
 import com.vkopendoh.questerapp.frontend.ui.models.UserModel;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Vladimir Kopendoh
  */
+@Component
+@Scope("prototype")
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Users")
 public class UsersView extends VerticalLayout {
     private UserClient userClient;
 
-    private Grid<UserModel> grid = new Grid<>(UserModel.class);
-    private TextField filterText = new TextField();
-    private UserForm form;
+    Grid<UserModel> grid = new Grid<>(UserModel.class);
+    TextField filterText = new TextField();
+    UserForm form;
 
     public UsersView(UserClient userClient) {
         this.userClient = userClient;
@@ -72,10 +73,10 @@ public class UsersView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addContactBtn = new Button("Add user");
-        addContactBtn.addClickListener(click -> addUser());
+        Button addUserBtn = new Button("Add user");
+        addUserBtn.addClickListener(click -> addUser());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactBtn);
+        HorizontalLayout toolbar = new HorizontalLayout(filterText, addUserBtn);
         toolbar.addClassName("toolbar");
         return toolbar;
     }

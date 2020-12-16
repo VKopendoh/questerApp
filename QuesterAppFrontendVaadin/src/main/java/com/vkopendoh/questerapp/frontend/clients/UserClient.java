@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,12 +16,12 @@ import java.util.stream.Collectors;
  * @author Vladimir Kopendoh
  */
 @Service
-public class UserClient extends Client {
+public class UserClient {
     private final Environment env;
     private final String gatewayPath;
     private final RestTemplate restTemplate;
 
-    UserClient(Environment env, RestTemplateBuilder restTemplateBuilder) {
+    public UserClient(Environment env, RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
         this.env = env;
         this.gatewayPath = env.getProperty("quester.gateway.url");
@@ -30,9 +29,9 @@ public class UserClient extends Client {
 
     public List<UserModel> findAll() {
         final String usersUrl = gatewayPath + env.getProperty("quester.users.url");
-        ResponseEntity<List<UserModel>> albumsListResponse = restTemplate.exchange(usersUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<UserModel>>() {
+        ResponseEntity<List<UserModel>> usersResponse = restTemplate.exchange(usersUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<UserModel>>() {
         });
-        List<UserModel> users = albumsListResponse.getBody();
+        List<UserModel> users = usersResponse.getBody();
         return users;
     }
 
@@ -49,13 +48,4 @@ public class UserClient extends Client {
     public void save(UserModel userModel) {
 
     }
-
-
-    //commented using RestTemplate and instead this use Feign client just this: albumsServiceClient.getAlbums(userId) !!! INSTEAD ALL boilerplate below
-      /*  String albumsUrl = String.format(environment.getProperty("albums.url"),userId);
-        ResponseEntity<List<AlbumResponseModel>> albumsListResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
-        });
-
-        List<AlbumResponseModel> albumsList = albumsListResponse.getBody();*/
-
 }
