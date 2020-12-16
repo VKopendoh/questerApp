@@ -8,9 +8,13 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,18 +27,19 @@ import java.util.stream.Stream;
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     Environment environment;
-
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, Environment environment) {
+    public UserServiceImpl(UserRepository userRepository, Environment environment, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.environment = environment;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     public UserDto createUser(UserDto userDetails) {
         userDetails.setUserId(UUID.randomUUID().toString());
-        userDetails.setEncryptedPassword(userDetails.getPassword());
+        userDetails.setEncryptedPassword(bCryptPasswordEncoder.encode(userDetails.getPassword()));
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -54,7 +59,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
 
         return new ModelMapper().map(userEntity, UserDto.class);
-
     }
 
     @Override
@@ -67,7 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getUsers() {
-        List<UserDto> users = userRepository.findAll().stream().map(user-> new ModelMapper().map(user,UserDto.class)).collect(Collectors.toList());
+        List<UserDto> users = userRepository.findAll().stream().map(user -> new ModelMapper().map(user, UserDto.class)).collect(Collectors.toList());
         return users;
     }
 
@@ -97,4 +101,13 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAll(users);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> {
+            throw new NotFoundException("Not found with email: " + email);
+        });
+
+        // TODO: Left it like this for while, later implement users details
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getEncryptedPassword(),true,true,true,true,new ArrayList<>());
+    }
 }

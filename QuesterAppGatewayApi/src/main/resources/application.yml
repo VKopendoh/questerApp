@@ -35,3 +35,21 @@ hystrix:
 ui:
   ribbon:
     NFLoadBalancerRuleClassName: com.vkopendoh.questerapp.gateway.StickySessionRule
+
+api:
+  h2console:
+    url: /users-ws/h2-console/**
+  login:
+    url: /users-ws/users/login
+  registration:
+    url: /users-ws/users
+
+auth:
+  token:
+    header:
+      prefix: Bearer
+      name: Authorization
+
+
+token:
+  secret: sajhdfijsahfHIG237143g1hgUYGUYWGQ3dsdsd
