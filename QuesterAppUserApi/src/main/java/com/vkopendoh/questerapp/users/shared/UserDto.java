@@ -1,6 +1,9 @@
 package com.vkopendoh.questerapp.users.shared;
 
+import com.vkopendoh.questerapp.users.ui.model.QuestResponseModel;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Vladimir Kopendoh
@@ -14,6 +17,7 @@ public class UserDto implements Serializable {
     private String email;
     private String userId;
     private String encryptedPassword;
+    private List<QuestResponseModel> quests;
 
     public String getFirstName() {
         return firstName;
@@ -61,5 +65,13 @@ public class UserDto implements Serializable {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    public List<QuestResponseModel> getQuests() {
+        return quests;
+    }
+
+    public void setQuests(List<QuestResponseModel> quests) {
+        this.quests = quests;
     }
 }

@@ -21,11 +21,11 @@ a[highlight] {
   display: flex;
 }
 
-.list-view .user-grid {
+.list-view .grid {
   flex: 2;
 }
 
-.list-view .user-form {
+.list-view .form {
   flex: 1;
   padding: var(--lumo-space-m);
 }
@@ -33,7 +33,7 @@ a[highlight] {
 /*Make responsive*/
 @media all and (max-width: 1100px) {
   .list-view.editing .toolbar,
-  .list-view.editing .user-grid {
+  .list-view.editing .grid {
     display: none;
   }
 }

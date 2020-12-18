@@ -1,4 +1,4 @@
-package com.vkopendoh.questerapp.frontend.ui.views.users;
+package com.vkopendoh.questerapp.frontend.ui.views.quests;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -11,7 +11,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vkopendoh.questerapp.frontend.clients.UserClient;
 import com.vkopendoh.questerapp.frontend.ui.MainLayout;
-import com.vkopendoh.questerapp.frontend.ui.models.UserModel;
+import com.vkopendoh.questerapp.frontend.ui.models.QuestModel;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -20,25 +20,28 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("prototype")
-@Route(value = "users", layout = MainLayout.class)
-@PageTitle("Users")
-public class UsersView extends VerticalLayout {
-    private UserClient userClient;
+@Route(value = "", layout = MainLayout.class)
+@PageTitle("Quests")
+public class QuestsView extends VerticalLayout {
 
-    Grid<UserModel> grid = new Grid<>(UserModel.class);
+    private static final long serialVersionUID = -454109589077688345L;
+
+    private final UserClient userClient;
+
+    Grid<QuestModel> grid = new Grid<>(QuestModel.class);
     TextField filterText = new TextField();
-    UserForm form;
+    QuestForm form;
 
-    public UsersView(UserClient userClient) {
+    public QuestsView(UserClient userClient) {
         this.userClient = userClient;
         addClassName("list-view");
         setSizeFull();
         configureGrid();
 
-        form = new UserForm();
-        form.addListener(UserForm.SaveEvent.class, this::saveUser);
-        form.addListener(UserForm.DeleteEvent.class, this::deleteUser);
-        form.addListener(UserForm.CloseEvent.class, e -> closeEditor());
+        form = new QuestForm();
+        form.addListener(QuestForm.SaveEvent.class, this::saveQuest);
+        form.addListener(QuestForm.DeleteEvent.class, this::deleteQuest);
+        form.addListener(QuestForm.CloseEvent.class, e -> closeEditor());
         closeEditor();
 
         Div content = new Div(grid, form);
@@ -49,13 +52,13 @@ public class UsersView extends VerticalLayout {
         updateList();
     }
 
-    private void deleteUser(UserForm.DeleteEvent event) {
-        userClient.delete(event.getContact());
+    private void deleteQuest(QuestForm.DeleteEvent event) {
+        userClient.deleteQuest(event.getQuest());
         updateList();
         closeEditor();
     }
 
-    private void saveUser(UserForm.SaveEvent event) {
+    private void saveQuest(QuestForm.SaveEvent event) {
 
         //userClient.save(event.getContact());
         updateList();
@@ -63,7 +66,7 @@ public class UsersView extends VerticalLayout {
     }
 
     private void closeEditor() {
-        form.setUser(null);
+        form.setQuest(null);
         form.setVisible(false);
         removeClassName("editing");
     }
@@ -74,36 +77,36 @@ public class UsersView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addUserBtn = new Button("Add user");
-        addUserBtn.addClickListener(click -> addUser());
+        Button addQuestBtn = new Button("Add quest");
+        addQuestBtn.addClickListener(click -> addQuest());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterText, addUserBtn);
+        HorizontalLayout toolbar = new HorizontalLayout(filterText, addQuestBtn);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
-    private void addUser() {
+    private void addQuest() {
         grid.asSingleSelect().clear();
-        editUser(new UserModel());
+        editQuest(new QuestModel());
     }
 
     private void updateList() {
-        grid.setItems(userClient.findAll(filterText.getValue()));
+        grid.setItems(userClient.findAllQuestsByUserId("id"));
     }
 
     private void configureGrid() {
-        grid.addClassName("user-grid");
+        grid.addClassName("grid");
         grid.setSizeFull();
-        grid.setColumns("firstName", "lastName", "email");
+        grid.setColumns("name", "description");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        grid.asSingleSelect().addValueChangeListener(event -> editUser(event.getValue()));
+        grid.asSingleSelect().addValueChangeListener(event -> editQuest(event.getValue()));
     }
 
-    private void editUser(UserModel user) {
-        if (user == null) {
+    private void editQuest(QuestModel quest) {
+        if (quest == null) {
             closeEditor();
         } else {
-            form.setUser(user);
+            form.setQuest(quest);
             form.setVisible(true);
             addClassName("editing");
         }

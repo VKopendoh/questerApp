@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author Vladimir Kopendoh
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private Environment env;

@@ -27,10 +27,26 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, environment.getProperty("api.registration.url")).permitAll()
                 .antMatchers(environment.getProperty("api.h2console.url")).permitAll()
+                .antMatchers(HttpMethod.POST, environment.getProperty("ui.registration.url")).permitAll()
+                .antMatchers(environment.getProperty("ui.login.url")).permitAll()
                 .antMatchers(HttpMethod.POST, environment.getProperty("api.login.url")).permitAll()
                 .anyRequest().authenticated()
                 .and().addFilter(new AuthorizationFilter(authenticationManager(),environment));
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+
+    @Override
+    public void configure(org.springframework.security.config.annotation.web.builders.WebSecurity web) {
+        web.ignoring().antMatchers(
+                "/ui/VAADIN/**",
+                "/ui/favicon.ico",
+                "/ui/robots.txt",
+                "/ui/manifest.webmanifest",
+                "/ui/sw.js",
+                "/ui/offline.html",
+                "/ui/icons/**",
+                "/ui/images/**",
+                "/ui/styles/**");
     }
 }
