@@ -33,6 +33,10 @@ hystrix:
             timeoutInMilliseconds: 3000
 
 ui:
+  login:
+    url: /ui/login/**
+  registration:
+    url: /ui/register/**
   ribbon:
     NFLoadBalancerRuleClassName: com.vkopendoh.questerapp.gateway.StickySessionRule
 
@@ -40,9 +44,12 @@ api:
   h2console:
     url: /users-ws/h2-console/**
   login:
-    url: /users-ws/users/login
+    url: /users-ws/user/login
   registration:
-    url: /users-ws/users
+    url: /users-ws/user
+
+
+
 
 auth:
   token:
@@ -53,3 +60,4 @@ auth:
 
 token:
   secret: sajhdfijsahfHIG237143g1hgUYGUYWGQ3dsdsd
+

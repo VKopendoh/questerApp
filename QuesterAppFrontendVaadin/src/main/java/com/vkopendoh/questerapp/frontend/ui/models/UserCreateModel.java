@@ -1,23 +1,31 @@
 package com.vkopendoh.questerapp.frontend.ui.models;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author Vladimir Kopendoh
  */
-public class UserModel implements Serializable {
+public class UserCreateModel implements Serializable {
+    private static final long serialVersionUID = 7412422102638825577L;
 
-    private static final long serialVersionUID = 3292342413220112764L;
-
-    public UserModel(){}
-
+    @NotNull
+    @Length(min = 1, max = 32)
     private String firstName;
-    private String lastName;
-    private String email;
-    private String userId;
 
-    private List<QuestModel> quests;
+    @NotNull
+    @Length(min = 1, max = 32)
+    private String lastName;
+
+    @Email
+    private String email;
+
+    @NotNull
+    @Length(min = 8, max = 64)
+    private String password;
 
     public String getFirstName() {
         return firstName;
@@ -43,19 +51,11 @@ public class UserModel implements Serializable {
         this.email = email;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public List<QuestModel> getQuests() {
-        return quests;
-    }
-
-    public void setQuests(List<QuestModel> quests) {
-        this.quests = quests;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

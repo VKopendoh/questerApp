@@ -3,12 +3,14 @@ package com.vkopendoh.questerapp.frontend.ui;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
+import com.vkopendoh.questerapp.frontend.ui.views.quests.QuestsView;
 import com.vkopendoh.questerapp.frontend.ui.views.users.UsersView;
 
 /**
@@ -25,8 +27,10 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("Quester App");
         logo.addClassName("logo");
 
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);
+        Anchor logout = new Anchor("logout", "Log out");
 
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+        header.expand(logo);
         header.setDefaultVerticalComponentAlignment(
                 FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
@@ -36,9 +40,9 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink usersLink = new RouterLink("Users", UsersView.class);
-        usersLink.setHighlightCondition(HighlightConditions.sameLocation());
+        RouterLink questsLink = new RouterLink("Quests", QuestsView.class);
+        questsLink.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(usersLink));
+        addToDrawer(new VerticalLayout(questsLink));
     }
 }
